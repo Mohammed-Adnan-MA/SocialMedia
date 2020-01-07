@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<!-- Still under development -->
+
+<html lang="ar" dir="rtl">
+    <head>
+       <title>forget password page</title>
+       <link href="{{ url_for('static', filename='forgstyle.css') }}" type="text/css" rel="stylesheet">
+       <style>
+       #msg
+       {
+           visibility: hidden;
+           min-width: 250px;
+           background-color: yellow;
+           color: #000;
+           text-align: center;
+           border-radius: 2px;
+           padding: 16px;
+           position: fixed;
+           z-index: 1;
+           right: 37%;
+           top: 30px;
+           font-size: 17px;
+           margin-right: 50px;
+       }
+
+       #msg.show{
+                visibility: visible;
+                -webkit-animation: fadein 0.5s, fadeout 0.5s 205s;
+                animation: fadein 0.5s, fadeout 0.5s 2.5s;
+            }
+
+            @-webkit-keyframes fadein{
+                form{top:0; opacity: 0;}
+                to{top:30px; opacity: 1;}
+
+            }
+
+            @keyframes fadein{
+                form{top:0; opacity: 0;}
+                to{top:30px; opacity: 1;}
+            }
+
+            @-webkit-keyframes fadeout{
+                from{top:30px; opacity: 1;}
+                to{top:0; opacity: 0;}
+            }
+            @keyframes fadeout{
+                from{top:30px; opacity: 1;}
+                to{top:0; opacity: 0;}
+            }
+       </style>
+    </head>
+    <body>
+        <div class="forget">
+            <form>
+                <h2 align="center" style="color: #fff;">اعادة تعيين كلمة المرور</h2>
+                <h5 style="font-size: 14px; color: yellow;">
+                    ادخل الايميل الذي استخدمته لحسابك , سوف نرسل لك رابط لتغيير كلمة المرور الخاصة بك
+                
+                </h5>
+                <input type="text" name="username" placeholder="ادخل بريدك الالكتروني" /><br/><br/>
+                <input type="button" value="ارسال" onclick="myFunction()"/><br/><br/>
+                <a href="index.html" style="text-decoration: none;">اذهب الى الصفحة الرئيسية</a><br/><br/>
+
+                <div id="msg">
+                    تم ارسال الرابط الى ايميلك بنجاح !!</div>
+
+                    <script>
+                        function myFunction(){
+                            var x = document.getElementById("msg");
+                            x.className="show";
+                            setTimeout(function(){x.className=x.className.replace("show", ""); }, 3000);
+                        }
+                    
+                    </script>
+
+               
+
+            </form>
+        </div>
+    </body>
+</html>

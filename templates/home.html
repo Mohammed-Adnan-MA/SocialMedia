@@ -1,0 +1,108 @@
+{% extends "layout.html" %}
+{% block content %}
+<!-- Still under development -->
+<script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js"></script>
+
+  <div id="here-lied-posts">
+  </div>  
+
+    <script id="posts-template" type="text/x-handlebars-template">
+        {% raw -%}
+          {{#each posts}}
+            <article class="media content-section">
+                <img class="rounded-circle article-img" src="#">
+                <div class="media-body">
+                  
+                  <div class="article-metadata">
+        {%- endraw %}
+                    <a class="mr-2" href="{{ url_for('account') }}">{% raw -%} {{lookup ../postUsername @index}} {%- endraw %}</a>
+        {% raw -%}
+                    <small class="text-muted">{{ post_date }}</small>
+                  </div>
+                  
+                  <h2><a class="article-title" href="#"></a></h2>
+                  <p class="article-content">{{ body }}</p>
+                  <!-- Post Comments -->
+
+
+                    <hr>
+                    <div style="background-color:rgb(169, 166, 204);" class="comments" >
+                        <div class="content">
+                                <div class="picture">
+                                        <img class="rounded-circle article-img" src="77.jpg">
+                                    </div>
+                                        <div class="name">
+                                            <h4>{{lookup ../commentUsername @index}}</h4>
+                                            
+                                            <p>{{test ../posts id}}</p>
+                                            
+                                        </div>
+                        </div>                         
+                    </div>
+          
+                      <div class="post-comment">
+                          
+                         <div class="write"><input type="text" placeholder="write a comment"></div> 
+                        <div class="post" ><input type="submit" value="post"></div> 
+                    </div>
+                </div>
+            </article>
+        {{/each}} 
+      {%- endraw %}
+    </script>     
+
+    
+     
+
+    <script>
+        $(document).ready(function() {
+                  
+          fetch(`${window.origin}/loadposts`, {
+                method:"GET",
+                dataType: 'json'
+            })
+            .then((res) => {
+              if (!res.ok) {
+                throw new Error("HTTP error, status = " + response.status);
+              }
+              return res.json();
+            })
+            .then((data) => {
+              createHTML(data);
+            })
+            .catch((err)=> console.log(err));
+        });   
+
+        function createHTML(postsContent){
+          var postsTemplate = document.querySelector("#posts-template").innerHTML;
+          var compiledPostsTemplate = Handlebars.compile(postsTemplate);
+          var postsGeneratedHTML = compiledPostsTemplate(postsContent);
+          var postsContainer = document.querySelector("#here-lied-posts");
+          postsContainer.innerHTML = postsGeneratedHTML;
+        }
+
+
+        Handlebars.registerHelper("test", function(x, y) {
+          var html = "<ul>";
+          x.forEach(function(entry) {
+            if(entry.postComments.join()){
+              console.log(entry.postComments.join());
+            }
+                     
+                  
+          });
+          html += "</ul>";
+          
+          console.log(html, y);
+        });
+
+        Handlebars.registerHelper('if_eq', function(a, b, opts) {
+              if (a == b) {
+                  return opts.fn(this);
+              } else {
+                  return opts.inverse(this);
+              }
+        });
+</script>
+{% endblock content %}

@@ -1,0 +1,68 @@
+body
+{
+    color: #fff;
+    background: url(/1.jpg);
+    background-size: cover;
+}
+
+a
+{
+    color: yellow;
+    text-decoration: blink;
+    margin-right: 45px;
+}
+
+.forget
+{
+    background: rgba(44,62,80,0.7);
+    padding: 40px;
+    width: 240px;
+    height: 340px;
+    margin-left: 180px;
+    margin: 0 auto;
+    margin-top: 120px;
+
+}
+
+h2
+{
+    margin-top: 28px;
+    margin-left: 10px;
+}
+
+
+input[type=text]
+{
+    width: 240px;
+    text-align: center;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #fff;
+    font-family: 'play' , sans-serif;
+    font-size: 16px;
+    font-weight: 200px;
+    padding: 10px 0;
+    transition: border 0.5s;
+    outline: none;
+    color: #fff;
+}
+
+input[type=button]
+{
+    border: none;
+    width: 190px;
+    background: white;
+    color: #000;
+    font-size: 16px;
+    line-height: 25px;
+    padding: 10px 0;
+    border-radius: 15px;
+    cursor: pointer;
+    margin-right: 15px;
+
+}
+
+::placeholder{
+    color: aliceblue;
+    opacity: 0.8;  /*firefox*/
+}

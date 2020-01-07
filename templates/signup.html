@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+    <head>
+      <title>Sign Up Page</title>
+      <link href="{{ url_for('static', filename='signupstyle.css') }}" rel="stylesheet" type="text/css" />
+      <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+
+       <style>
+           #msg{
+               visibility:hidden ;
+               min-width: 250px;
+               background-color: white;
+               color: #000;
+               text-align: center;
+               border-radius: 2px;
+               padding: 16px;
+               position: fixed;
+               z-index: 1;
+               
+               top: 30px;
+               font-size: 17px;
+           }
+
+            #msg.show{
+                visibility: visible;
+                -webkit-animation: fadein 0.5s, fadeout 0.5s 205s;
+                animation: fadein 0.5s, fadeout 0.5s 2.5s;
+            }
+
+            @-webkit-keyframes fadein{
+                form{top:0; opacity: 0;}
+                to{top:30px; opacity: 1;}
+
+            }
+
+            @keyframes fadein{
+                form{top:0; opacity: 0;}
+                to{top:30px; opacity: 1;}
+            }
+
+            @-webkit-keyframes fadeout{
+                from{top:30px; opacity: 1;}
+                to{top:0; opacity: 0;}
+            }
+            @keyframes fadeout{
+                from{top:30px; opacity: 1;}
+                to{top:0; opacity: 0;}
+            }
+
+       </style>
+    </head>
+    <body>
+        <div class="signup" >
+            <form name="vform" id="vform">
+                <h2 style="color: #fff;">تسجيل حساب جديد</h2>
+                <input type="text" name="username" for="username" id="username" onkeyup="lettersOnly(this)" placeholder="اسم المستخدم">
+                <div id="username_error" class="val_error"></div><br>
+                <input type="text" name="fname" for="fname" id="fname" onkeyup="lettersOnly(this)" placeholder="الاسم الاول">
+                <div id="fname_error" class="val_error"></div><br>
+                <input type="text" name="lname" for="lname" id="lname" onkeyup="lettersOnly(this)" placeholder="الاسم الاخير">
+                <div id="lname_error" class="val_error"></div><br>
+                
+                <input type="text" id="phonenumber" for="phonenumber" onkeypress="isInputNumber(event)" name="phonenumber" placeholder="رقم الهاتف">
+                <div id="phonenumber_error" class="val_error"></div><br>
+                <input type="password" id="password" for="password" name="password" placeholder="كلمة المرور"> 
+                <div id="password_error" class="val_error"></div><br>
+                <input type="password" id="confpassword" for="confpassword" name="confpassword" placeholder="تأكيد كلمة المرور">
+                <div id="confpassword_error" class="val_error"></div><br>
+                <div class="select-selected" style="width:200px;" >
+                        <select name="gender" for="gender" id="gender">
+                    
+                          <option value="0">Gender:</option>
+                          <option value="1">Male</option>
+                          <option value="2">Female</option>
+                    
+                        
+                        </select>
+                      </div><br>
+                      <input type="date" name="date" for="date" id="date" placeholder="YYYY-MM-DD"><br><br>
+                      <a href=""><div class="buttonn"><input type="submit"  onsubmit="return phonenumber()"; name="register"  value="تسجيل جديد"></div> </a><br><br><br>
+                      <div id="msg">تهانينا ! لقد قمت بتسجيل حساب جديد</div>
+
+                      <div id="container">
+                    
+                            <a href="#" style="margin-right: 0px; font-size: 13px; font-family: Tahoma, Geneva, sans-serif;">هل نسيت كلمة المرور؟ </a>        
+                    </div><br>
+        
+        
+<!--
+                      <script>
+                      function myFunction(){
+                          var x = document.getElementById("msg");
+                          x.className = "show";
+                          setTimeout(function(){ x.className =
+                          x.className.replace("show","");}, 3000);
+                      }
+
+                      function validateForm() {
+                  var x = document.forms["myForm"]["fname"].value;
+                  if (x == "" || x == null) {
+                    alert("يجب ملئ جميع الحقول");
+                    return false;
+                  }
+                }
+
+                function phonenumber(inputtxt)
+{
+  var phoneno = /^\d{10}$/;
+  if(inputtxt.value.match(phoneno))
+  {
+      return true;
+  }
+  else
+  {
+     alert("Not a valid Phone Number");
+     return false;
+  }
+  }
+                      </script> -->
+                      
+        تمتلك حساب ؟ <a href="{{ url_for('login') }}" style="color: yellow;">&nbsp;تسجيل دخول</a>
+
+
+
+        
+                
+                
+            </form>
+        </div>
+
+    </body>
+
+    
+<!--adding js-->
+<script type="text/javascript">
+    //getting all input text object
+    var username = document.forms["vform"]["username"];
+    var fname = document.forms["vform"]["fname"];
+    var lname = document.forms["vform"]["lname"];
+    //var username = document.forms["vform"]["username"];
+    var phonenumber = document.forms["vform"]["phonenumber"];
+    var password = document.forms["vform"]["password"];
+    var confpassword = document.forms["vform"]["confpassword"];
+
+    //getting all error display object
+    var fname_error = document.getElementById("fname_error");
+  var lname_error = document.getElementById("lname_error");
+var username_error = document.getElementById("username_error");
+var phonenumber_error = document.getElementById("phonenumber_error");
+var password_error = document.getElementById("password_error");
+var confpassword_error = document.getElementById("confpassword_error");
+
+//setting all event listeners
+fname.addEventListener("blur" , fnameVerify, true);
+lname.addEventListener("blur" , lnameVerify, true);
+username.addEventListener("blur" , nameVerify, true);
+phonenumber.addEventListener("blur" , phonenumberVerify, true);
+password.addEventListener("blur" , passwordVerify, true);
+confpassword.addEventListener("blur" , confpasswordVerify, true);
+
+//validation function
+function validate(){
+        //fname validation
+        if (fname.value == "") {
+        fname.style.border = " 1px solid red";
+        fname_error.textContent = "الاسم الاول مطلوب";
+        fname.focus();
+        return false;
+    }
+        //lname validation
+        if (lname.value == "") {
+        lname.style.border = " 1px solid red";
+        lname_error.textContent ="الاسم الاخير مطلوب";
+        lname.focus();
+        return false;
+    }
+
+    //username validation
+    if (username.value == "") {
+        username.style.border = " 1px solid red";
+        username_error.textContent = "اسم المستخدم مطلوب";
+        username.focus();
+        return false;
+    
+    }
+    //phonenumber validation
+    if
+    (phonenumber.value == "") {
+        phonenumber.style.border = " 1px solid red";
+        phonenumber_error.textContent = "رقم الهاتف مطلوب";
+        phonenumber.focus();
+        return false;
+    } 
+    
+     //password validation
+     if
+    (password.value == "") {
+        password.style.border = " 1px solid red";
+        password_error.textContent = "كلمة المرور مطلوبة";
+        password.focus();
+        return false;
+    } 
+     //confpassword validation
+     if
+    (confpassword.value == "") {
+        confpassword.style.border = " 1px solid red";
+        confpassword_error.textContent = "تاكيد كلمة المرور مطلوبه";
+        confpassword.focus();
+        return false;
+    } 
+}
+
+//event handler functiond
+
+function fnameVerify(){
+    if (fname.value != ""){
+        fname.style.border = "1px solid #5E6E66";
+        fname_error.innerHTML ="";
+        return true;
+    }
+}
+
+function lnameVerify(){
+    if (lname.value != ""){
+        lname.style.border = "1px solid #5E6E66";
+        lname_error.innerHTML ="";
+        return true;
+    }
+}
+
+function nameVerify(){
+    if (username.value != ""){
+        username.style.border = "1px solid #5E6E66";
+        username_error.innerHTML ="";
+        return true;
+    }
+}
+
+function phonenumberVerify(){
+    if (phonenumber.value != ""){
+        phonenumber.style.border = "1px solid #5E6E66";
+        phonenumber_error.innerHTML ="";
+        return true;
+    }
+}
+
+function passwordVerify(){
+    if (password.value != ""){
+        password.style.border = "1px solid #5E6E66";
+        password_error.innerHTML ="";
+        return true;
+    }
+}
+
+function confpasswordVerify(){
+    if (confpassword.value != ""){
+        confpassword.style.border = "1px solid #5E6E66";
+        confpassword_error.innerHTML ="";
+        return true;
+    }
+}
+
+var password = document.getElementById("password")
+  , confpassword = document.getElementById("confpassword");
+
+function validatePassword(){
+  if(password.value != confpassword.value) {
+    confpassword.setCustomValidity("كلمة المرور غير متطابقة");
+  } else {
+    confpassword.setCustomValidity('');
+  }
+}
+
+password.onchange = validatePassword;
+confpassword.onkeyup = validatePassword;
+
+
+
+
+
+function phonenumber()
+
+{
+  if(isNaN(phonenumber(str)))
+  {
+    alert("يجب ادخال ارقام فقط");
+     return false;
+  }
+  else
+  {
+     return true;
+  }
+}
+
+
+function isInputNumber(evt){
+    var ch = String.fromCharCode(evt.which);
+
+    if(!(/[0-9]/.test(ch))){
+        evt.preventDefault();
+    }
+}
+
+function lettersOnly(input)
+{
+var regex = /[^a-z]/gi;
+input.value = input.value.replace(regex, "");
+}
+
+$(document).ready(function() {
+    const myForm = document.getElementById("vform");
+    myForm.addEventListener('submit', function(e){
+        
+
+        let username = document.getElementById('username').value;
+        let fname = document.getElementById('fname').value;
+        let lname = document.getElementById('lname').value;
+        let phoneNumber = document.getElementById('phonenumber').value;
+        let password = document.getElementById('password').value;
+        let confpassword = document.getElementById('confpassword').value;
+        let gender = document.getElementById('gender').value;
+        let date = document.getElementById('date').value;
+            
+        if(typeof username, fname, lname, phoneNumber, password, confpassword, gender, date !== 'undefined' && username, fname,
+            lname, phoneNumber, password, confpassword, gender, date !== null) {
+
+            var signUpData = {
+                username: username,
+                fname: fname,
+                lname: lname,
+                phoneNo: phoneNumber,
+                password: password,
+                confpasswoord: confpassword,
+                gender: gender,
+                birthDate: date,
+                profileImgURL: "bla bla",
+            };  
+
+        
+            fetch(`${window.origin}/signup`, {
+                method:"POST",
+                credentials: "include",
+                credentials: 'same-origin',
+                body:JSON.stringify(signUpData),
+                cache: "no-cache",
+                headers: new Headers({
+                    "content-type": "application/json"
+                })
+            })
+            .then((res) => {
+            if (res.status == 200){
+               return window.location.href = "{{ url_for('login') }}"
+            }
+            else {
+                console.log(`Fetch error: ${res.status}`)
+                return ;
+            }
+
+        })
+    
+            .then((data) => console.log(data))
+            
+            .catch((err)=>console.log(err))
+
+            console.log(signUpData);
+
+            e.preventDefault();
+        }
+    });
+});
+
+
+</script> 

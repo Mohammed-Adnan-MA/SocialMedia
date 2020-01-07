@@ -1,0 +1,77 @@
+{% extends "layout.html" %}
+{% block content %}
+<!-- Still under development -->
+
+<div class="content-section" enctype="multipart/form-data">
+    <form id="post-form"  enctype="multipart/form-data">
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">New Post</legend>
+            <div class="form-group">
+                <label class="form-control-label">Post Image:</label>
+                <br>
+                <input type="file" name="img" id="img" accept="image/*">
+            </div>
+            <div class="form-group">
+                <label class="form-control-label">Content:</label>
+                <textarea type="text" class="form-control form-control-lg" name="body" id="body" cols="30" rows="3"></textarea>
+            </div>
+        </fieldset>
+        <div class="form-group">
+            <input type="submit" class="btn btn-outline-info" value="Publish">
+        </div>
+    </form>
+</div>
+
+
+<script type="text/javascript">
+
+
+    $(document).ready(function() {
+        const myForm = document.getElementById("post-form");
+        myForm.addEventListener('submit', function(e){
+            
+
+            let img = document.getElementById('img').value;
+            let body = document.getElementById('body').value;
+            
+            if(typeof img, body !== 'undefined' && body !== null) {
+
+                var newPost = {
+                    img: img,
+                    body: body,
+                };  
+
+                console.log(newPost);
+            
+                fetch(`${window.origin}/post/new`, {
+                    method:"POST",
+                    credentials: "include",
+                    credentials: 'same-origin',
+                    body:JSON.stringify(newPost),
+                    cache: "no-cache",
+                    headers: new Headers({
+                        "content-type": "application/json"
+                    })
+                })
+                .then((res) => {
+                    if (res.status == 200){
+                        return window.location.href = "{{ url_for('home') }}"
+                    }
+                    else {
+                        console.log(`Fetch error: ${res.status}`)
+                        return ;
+                    }
+                })
+                .then((data) => console.log(data))
+                
+                .catch((err)=> console.log(err))
+
+                
+
+                e.preventDefault();
+            }
+        });
+    });
+
+</script>
+{% endblock content %}

@@ -1,0 +1,156 @@
+body
+{
+    color: #fff;
+    background: url(77.jpg);
+    background-size: cover;
+
+}
+
+.signup
+{
+    background: rgb(44,62,80,0.7);
+    padding: 40px;
+    width: 250px;
+    height: 650px;
+    margin-top: 50PX;
+    margin-left: 180px;
+    margin: 0 auto;
+}
+
+form
+{
+    width: 240px;
+    text-align: center;
+}
+
+input
+{
+    width: 240px;
+    text-align: center;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #fff;
+    font-family: 'play' , sans-serif;
+    font-size: 16px;
+    font-weight: 200px;
+    padding: 10px 0;
+    transition: border 0.5s;
+    outline: none;
+    color: #fff;
+}
+
+
+input[type=submit]
+{
+    border: none;
+    width: 190px;
+    background: white;
+    color: #000;
+    font-size: 16px;
+    line-height: 25px;
+    padding: 10px 0;
+    border-radius: 15px;
+    cursor: pointer;
+
+}
+
+input[type=submit]:hover
+{
+    color: white;
+    background-color: black;
+
+}
+
+h2
+{
+    color: white;
+}
+
+a
+{
+    color: yellow;
+    text-decoration: blink;
+
+}
+
+a:hover
+{
+    color: skyblue;
+}
+.container
+{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+::placeholder{
+    color: aliceblue;
+    opacity: 0.8;  /*firefox*/
+}
+
+
+select
+{
+    width: 240px;
+    text-align: center;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #fff;
+    font-family: 'play' , sans-serif;
+    font-size: 16px;
+    font-weight: 200px;
+    padding: 10px 0;
+    transition: border 0.5s;
+    outline: none;
+    color:#fff;  
+    position: relative;
+    list-style-type: none;
+    padding-right: 90px;;
+}
+
+
+
+
+
+  .select-selected {
+    background-color: transparent;
+
+  }
+  .select-selected:after {
+    position: absolute;
+    content: "";
+    top: 14px;
+    right: 10px;
+    width: 0;
+    height: 0;
+    border: 6px solid transparent;
+    border-color: #000 transparent transparent transparent;
+    background-color: #000;
+  }
+
+  .select-selected.select-arrow-active:after {
+    border-color: transparent transparent #000 transparent;
+    top: 7px;
+    background-color: #000;
+  }
+
+  .select-selected.select-arrow-active:after {
+    border-color: transparent transparent #000 transparent;
+    top: 7px;
+    background-color: #000;
+  }
+
+  .select-items {
+    position: absolute;
+    background-color: DodgerBlue;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 99;
+    background-color: #000;
+  }
+ 
+  select option{
+      background-color: #4f5e59;
+  }

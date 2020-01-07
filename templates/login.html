@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html  lang="ar" dir="rtl">
+<head>
+    <title>Login Page</title>
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet" type="text/css">
+    <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+
+    
+
+</head>
+<body>
+
+    <div class="signin">
+        <form  onsubmit="return validate()" name="vform" id="vform">
+            <h2>تسجيل الدخول</h2>
+            <input type="text" name="phonenumber" for="phonenumber" id="phoneNumber" onkeypress="isInputNumber(event)"  placeholder="رقم الهاتف">
+            <div id="phonenumber_error" class="val_error"></div>
+            <input type="password" name="password"  for="password" id="password" placeholder="كلمة المرور">
+            <div id="password_error" class="val_error"></div><br><br>
+            <input type="checkbox" id="rememberMe"> Remember Me
+            <a href=""><div class="buttonn"><input type="submit" name="register" value="تسجيل الدخول"></div> </a><br><br>
+            
+
+            <div id="container">
+                    
+                    <a href="#" style="margin-right: 0px; font-size: 13px; font-family: Tahoma, Geneva, sans-serif;">هل نسيت كلمة المرور؟ </a>        
+            </div><br><br><br><br><br><br>
+
+
+            هل تمتلك حسابا؟ <a href="{{ url_for('signup') }}">&nbsp;حساب جديد  </a>
+            
+        </form>
+    </div>
+   <!-- <script>
+            function validateForm() {
+              var x = document.forms["myForm"]["fname"].value;
+              if (x == "" || x == null) {
+                alert("يجب ملئ جميع الحقول");
+                return false;
+              }
+            }
+            </script>-->
+   
+
+
+</body>
+</html>
+
+<!--adding js-->
+<script type="text/javascript">
+//getting all input text object
+var phonenumber = document.forms["vform"]["phonenumber"];
+var password = document.forms["vform"]["password"];
+//getting all error display object
+var phonenumber_error = document.getElementById("phonenumber_error");
+var password_error = document.getElementById("password_error");
+
+//setting all event listeners
+phonenumber.addEventListener("blur" , phonenumberVerify, true);
+password.addEventListener("blur" , passwordVerify, true);
+
+//validation function
+function validate(){
+    //username validation
+    if (phonenumber.value == "") {
+        phonenumber.style.border = " 1px solid red";
+        phonenumber_error.textContent = "رقم الهاتف مطلوب";
+        phonenumber.focus();
+        return false;
+    }
+    //password validation
+    if
+    (password.value == "") {
+        password.style.border = " 1px solid red";
+        password_error.textContent = "كلمة المرور مطلوبة";
+        password.focus();
+        return false;
+    } 
+}
+
+//event handler functiond
+function phonenumberVerify(){
+    if (phonenumber.value != ""){
+        phonenumber.style.border = "1px solid #5E6E66";
+        phonenumber_error.innerHTML ="";
+        return true;
+    }
+}
+
+function passwordVerify(){
+    if (password.value != ""){
+        password.style.border = "1px solid #5E6E66";
+        password_error.innerHTML ="";
+        return true;
+    }
+}
+
+function isInputNumber(evt){
+    var ch = String.fromCharCode(evt.which);
+
+    if(!(/[0-9]/.test(ch))){
+        evt.preventDefault();
+    }
+}
+
+//ajax
+
+	//document.getElementById("add-post").addEventListener('submit',addPost);
+	//document.getElementById("getPosts").addEventListener('click',getPosts);
+
+
+
+//GetUserName
+
+$(document).ready(function() {
+    const myForm = document.getElementById("vform");
+    myForm.addEventListener('submit', function(e){
+                
+        let phonenumber = document.getElementById('phoneNumber').value;
+        let password = document.getElementById('password').value;
+        let rememberMe = document.getElementById('rememberMe').value;
+
+        if(typeof phonenumber, password, rememberMe !== 'undefined' && phonenumber, password, rememberMe !== null) {
+
+        var data =  {
+                        phoneNo: phonenumber,
+                        password: password,
+                        rememberMe: rememberMe,
+                    };
+
+        fetch(`${window.origin}/login`, {
+            method:'POST',
+            credentials: "include",
+            body: JSON.stringify(data),
+            cache: "no-cache",
+            headers: {
+                "Content-Type": "application/json"
+            },
+        })
+        .then((res) => {
+            if (res.status == 200){
+               return window.location.href = "{{ url_for('home') }}"
+            }
+            else {
+                console.log(`Fetch error: ${res.status}`)
+                return ;
+            }
+
+        })
+        
+        .then(text=> console.log(text))
+
+        .then((data)=> console.log(data))
+
+        .catch((err)=> console.log(err));
+
+        console.log(data);
+
+        e.preventDefault();
+        }
+    });
+});
+	
+	
+</script>

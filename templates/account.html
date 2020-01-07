@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+{% block content %}
+<!-- Still under development -->
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+<meta content="utf-8" http-equiv="encoding">
+<script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js"></script>
+
+    <div id="here-lied-user-info">
+    </div> 
+
+<script id="user-info-template" type="text/x-handlebars-template">
+    {% raw -%}
+    <div class="content-section">
+      <div class="media">
+        <img class="rounded-circle account-img" src="{{ image_file }}">
+        <div class="media-body">
+          <h2 class="account-heading">{{ userInfo.first_name }}  {{ userInfo.last_name }}</h2>
+          <p class="text-secondary">{{ userInfo.username }}</p>
+        </div>
+      </div>
+        <form method="POST" action="" enctype="multipart/form-data">
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Account Info</legend>
+                <div class="form-group">
+                    <label class="form-control-label">Username: </label>
+                    <input class="form-control form-control-lg" value="{{userInfo.username}}">
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label">Phone Number: </label>
+                     <input class="form-control form-control-lg" value="{{ userInfo.phone_no }}">  
+                </div>
+                <div class="form-group">
+                  <label name="image"></label>  
+                    <img src="" class="form-control-file">
+                </div>
+            </fieldset>
+            <div class="form-group">
+                <button type="submit" class="btn btn-outline-info">Update</button>
+            </div>
+        </form>
+    </div>
+    {%- endraw %}
+</script>    
+
+<script>
+    $(document).ready(function() {
+                
+        fetch(`${window.origin}/account-info`, {
+            method:"GET",
+            dataType:'json'
+        })
+        .then((res) => {
+            if (!res.ok) {
+            throw new Error("HTTP error, status = " + response.status);
+            }
+            return res.json();
+        })
+        .then((data) => {
+            createHTML(data);
+            console.log(data);
+        })
+        .catch((err)=> console.log(err));
+    });
+
+    function createHTML(userInfoContent){
+        var userInfoTemplate = document.querySelector("#user-info-template").innerHTML;
+        var compiledUserInfoTemplate = Handlebars.compile(userInfoTemplate);
+        var userInfoGeneratedHTML = compiledUserInfoTemplate(userInfoContent);
+        var userInfoContainer = document.querySelector("#here-lied-user-info");
+        userInfoContainer.innerHTML = userInfoGeneratedHTML;
+    }      
+</script>
+{% endblock content %}
