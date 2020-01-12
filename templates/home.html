@@ -9,6 +9,13 @@
 
     <script id="posts-template" type="text/x-handlebars-template">
         {% raw -%}
+        {{#each comments}}
+          {{#each ../commentUsername}}
+            {{#if_eq [1] ../comment_author}}
+                <h4>{{ [0] }}</h4>
+            {{/if_eq}}
+          {{/each}}
+        {{/each}}
           {{#each posts}}
             <article class="media content-section">
                 <img class="rounded-circle article-img" src="#">
@@ -24,28 +31,39 @@
                   <h2><a class="article-title" href="#"></a></h2>
                   <p class="article-content">{{ body }}</p>
                   <!-- Post Comments -->
+                  <hr>
+                  <div class="post-comment">
+                
+                    <div class="write">
+                        <input type="text" placeholder="Write a comment...">
+                    </div> 
+                    <div class="post" >
+                       <input type="submit" value="post" onsubmit="new_comment()">
+                    </div> 
+                  </div>
 
-
-                    <hr>
-                    <div style="background-color:rgb(169, 166, 204);" class="comments" >
-                        <div class="content">
-                                <div class="picture">
-                                        <img class="rounded-circle article-img" src="77.jpg">
-                                    </div>
-                                        <div class="name">
-                                            <h4>{{lookup ../commentUsername @index}}</h4>
-                                            
-                                            <p>{{test ../posts id}}</p>
-                                            
-                                        </div>
-                        </div>                         
-                    </div>
-          
-                      <div class="post-comment">
-                          
-                         <div class="write"><input type="text" placeholder="write a comment"></div> 
-                        <div class="post" ><input type="submit" value="post"></div> 
-                    </div>
+                  {{#each ../comments}}  
+                    {{#if_eq post_comments ../id}}
+                      
+                      <div style="background-color:rgb(169, 166, 204);" class="comments" >
+                          <div class="content">
+                            <div class="picture">
+                                    <img class="rounded-circle article-img" src="77.jpg">
+                                </div>
+                                    <div class="name">
+                                          
+                                      <h4>{{count ../../commentUsername}}</h4>
+                                    
+                                      
+                                      <p>{{comment}}</p>
+                                      {{comment_date}}
+                                        
+                                </div>
+                          </div>                         
+                      </div>
+                      <hr>
+                    {{/if_eq}}
+                  {{/each}}
                 </div>
             </article>
         {{/each}} 
@@ -69,6 +87,7 @@
               return res.json();
             })
             .then((data) => {
+              console.log(data);
               createHTML(data);
             })
             .catch((err)=> console.log(err));
@@ -83,26 +102,39 @@
         }
 
 
-        Handlebars.registerHelper("test", function(x, y) {
-          var html = "<ul>";
-          x.forEach(function(entry) {
-            if(entry.postComments.join()){
-              console.log(entry.postComments.join());
-            }
+        //Handlebars.registerHelper("comment", function(x){
+          //var html = "<ul>";
+          //x.forEach(function(entry) {
+            //if(entry.postComments.join()){
+              //console.log(entry.postComments.join());
+            //}
                      
                   
-          });
-          html += "</ul>";
+          //});
+          //html += "</ul>";
           
-          console.log(html, y);
+          //console.log(html);
+        //});
+        
+        var x = -1;
+        Handlebars.registerHelper('count', function(counter) {
+          x+=1;
+          if(x==counter.length){
+            x = 0;
+          }
+          else {
+            console.log(x + " " + counter[x]);
+            return(counter[x]);
+          }
         });
 
         Handlebars.registerHelper('if_eq', function(a, b, opts) {
-              if (a == b) {
-                  return opts.fn(this);
-              } else {
-                  return opts.inverse(this);
-              }
+            //console.log(a + " " + b);
+            if (a == b) {
+                return opts.fn(this);
+            } else {
+                return opts.inverse(this);
+            }
         });
 </script>
 {% endblock content %}

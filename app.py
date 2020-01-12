@@ -39,31 +39,43 @@ def home():
 @app.route("/loadposts")
 def loadPosts():
     postsImport = Posts.query.all()
-    commentsImport = Comments.query.all()
+    commentsImport = []
     #usernameImport = User_Info.query.with_entities(User_Info.username, User_Info.id).all()
     usernameExport = []
     commentUsernameExport = []
     posts_schema = PostsSchema(many=True)
     comments_schema = CommentsSchema(many=True)
     postsExport = posts_schema.dump(postsImport)
-    commentsExport = comments_schema.dump(commentsImport)
+    
     
     
     for i in postsImport:
+        print(i.id)
         for j in User_Info.query.with_entities(User_Info.username, User_Info.id).all():
             if i.post_author_id == j.id:
                 usernameExport.append(j.username)
+        for counter in Comments.query.all():
+            if i.id == counter.post_comments_id:
+                commentsImport.append(counter)
+                
+    commentsExport = comments_schema.dump(commentsImport)
+    print(commentsImport)
 
-    for i in commentsImport:
+    for i in Comments.query.all():
         for j in User_Info.query.with_entities(User_Info.username, User_Info.id).all():
             if i.comment_author_id == j.id:
                 commentUsernameExport.append(j.username)
+
+    if current_user.is_authenticated:
+        usernameComment = {"user_id": current_user.id, "username": current_user.username, "first_name": current_user.first_name,
+                    "last_name": current_user.last_name, "phone_no": current_user.phone_no}       
     
     return jsonify({
                     "posts": postsExport,
                     "postUsername": usernameExport,
                     "comments": commentsExport,
-                    "commentUsername": commentUsernameExport
+                    "commentUsername": commentUsernameExport,
+                    "currentComment": usernameComment
                     })
 
 ###########################################################################
