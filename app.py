@@ -1,4 +1,4 @@
-import requests, os, json
+import requests, os
 from flask import Flask, render_template, request, jsonify, session, make_response, url_for, redirect, flash
 from config import Config
 from flask_migrate import Migrate
