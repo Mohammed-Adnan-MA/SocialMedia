@@ -1,4 +1,4 @@
-import requests, os
+import requests, os, json
 from flask import Flask, render_template, request, jsonify, session, make_response, url_for, redirect, flash
 from config import Config
 from flask_migrate import Migrate
@@ -67,15 +67,16 @@ def loadPosts():
                 commentUsernameExport.append(j.username)
 
     if current_user.is_authenticated:
-        usernameComment = {"user_id": current_user.id, "username": current_user.username, "first_name": current_user.first_name,
-                    "last_name": current_user.last_name, "phone_no": current_user.phone_no}       
+        currentCommentNeedingInfo = {"user_id": current_user.id, "username": current_user.username, "state": "true"}
+    else:
+        currentCommentNeedingInfo = {"state": "Not authorized"}                       
     
     return jsonify({
                     "posts": postsExport,
                     "postUsername": usernameExport,
                     "comments": commentsExport,
                     "commentUsername": commentUsernameExport,
-                    "currentComment": usernameComment
+                    "newCommentDetails": currentCommentNeedingInfo
                     })
 
 ###########################################################################
@@ -202,7 +203,26 @@ def new_post():
 
 ###########################################################################    
 
-@app.route("/post/update/<int:post_id>", methods=['GET', 'POST'])
+
+@app.route("/store-new-comments", methods=['GET','POST'])
+@login_required
+def storeNewComments():
+    if request.method == "GET":
+        return redirect(url_for("home"))
+    if request.get_json() != None:
+        req = request.get_json()
+        comment = req["comment"]
+        postCommentId = req["whichPost"]
+        storeComment = Comments(comment = comment, comment_author = current_user, post_comments_id = postCommentId)
+
+        db.session.add(storeComment)
+        db.session.commit()
+        return make_response(jsonify({"message": "JSON received!"}), 200)
+    return make_response(jsonify({"message": "error"}), 422)
+
+###########################################################################
+
+@app.route("/post/update/<int:post_id>", methods=['GET','POST'])
 @login_required
 def update_post(post_id):
     #Still under development

@@ -307,7 +307,7 @@ var regex = /[^a-z]/gi;
 input.value = input.value.replace(regex, "");
 }
 
-$(document).ready(function() {
+document.addEventListener("DOMContentLoaded", function(){
     const myForm = document.getElementById("vform");
     myForm.addEventListener('submit', function(e){
         
@@ -348,15 +348,14 @@ $(document).ready(function() {
                 })
             })
             .then((res) => {
-            if (res.status == 200){
-               return window.location.href = "{{ url_for('login') }}"
-            }
-            else {
-                console.log(`Fetch error: ${res.status}`)
-                return ;
-            }
-
-        })
+                if (res.status == 200){
+                return window.location.href = "{{ url_for('login') }}"
+                }
+                else {
+                    console.log(`Fetch error: ${res.status}`)
+                    return ;
+                }
+            })
     
             .then((data) => console.log(data))
             

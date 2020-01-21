@@ -9,14 +9,8 @@
 
     <script id="posts-template" type="text/x-handlebars-template">
         {% raw -%}
-        {{#each comments}}
-          {{#each ../commentUsername}}
-            {{#if_eq [1] ../comment_author}}
-                <h4>{{ [0] }}</h4>
-            {{/if_eq}}
-          {{/each}}
-        {{/each}}
           {{#each posts}}
+          <div data-class="{{@index}}" class="loop-over">
             <article class="media content-section">
                 <img class="rounded-circle article-img" src="#">
                 <div class="media-body">
@@ -35,10 +29,10 @@
                   <div class="post-comment">
                 
                     <div class="write">
-                        <input type="text" placeholder="Write a comment...">
+                      <input type="text" class="new-comment-text" data-comment="{{@index}}" placeholder="Write a comment...">
                     </div> 
                     <div class="post" >
-                       <input type="submit" value="post" onsubmit="new_comment()">
+                       <input type="button" data-id="{{@index}}" class="set-new-comment" value="post" data-trigger="submit-new-comment">
                     </div> 
                   </div>
 
@@ -48,33 +42,53 @@
                       <div style="background-color:rgb(169, 166, 204);" class="comments" >
                           <div class="content">
                             <div class="picture">
-                                    <img class="rounded-circle article-img" src="77.jpg">
-                                </div>
-                                    <div class="name">
+                                <img class="rounded-circle article-img" src="77.jpg">
+                            </div>
+                            <div class="name">
                                           
-                                      <h4>{{count ../../commentUsername}}</h4>
-                                    
-                                      
-                                      <p>{{comment}}</p>
-                                      {{comment_date}}
+                              <h4>{{count ../../commentUsername}}</h4>                                              
+                              <p>{{comment}}</p>
+                              {{comment_date}}
                                         
-                                </div>
+                            </div>
                           </div>                         
                       </div>
-                      <hr>
+                      <hr> 
                     {{/if_eq}}
                   {{/each}}
+                    <div id="here-lied-new-comment">
+                    </div>
                 </div>
             </article>
+          </div>
         {{/each}} 
       {%- endraw %}
     </script>     
+
+    <!-- Post Comments template -->
+  
+    <script id="new-comment-template" type="text/x-handlebars-template">
+      {% raw -%}
+            <div class="comments" >
+                <div class="content">
+                        <div class="picture">
+                          <img class="rounded-circle article-img" src="77.jpg">
+                        </div>
+                        <div class="name">
+                            <h4>{{data.username}}</h4>
+                            <p>{{comment}}</p>
+                        </div>
+                </div>
+            </div>
+      {%- endraw %}
+    </script>  
+
 
     
      
 
     <script>
-        $(document).ready(function() {
+      document.addEventListener("DOMContentLoaded", function(){
                   
           fetch(`${window.origin}/loadposts`, {
                 method:"GET",
@@ -87,12 +101,137 @@
               return res.json();
             })
             .then((data) => {
-              console.log(data);
+              //console.log(data);
               createHTML(data);
+              //new_comment(data.newCommentDetails);
+              
+            $(document).on("click", "[data-trigger='submit-new-comment']", function(e) {
+              var submitButtonsIds = $(this).data('id');
+              //$("input[data-comment]").each(function(){
+                //console.log($(this));
+                //var x =  document.querySelector(".new-comment-text").getAttribute("data-comment");
+                //var x = document.querySelector("[data-trigger='set-new-comment']").dataset.id; 
+                //var x = $(this).data('id');
+                //var x = document.querySelectorAll("[data-comment]"); 
+                /*if(document.querySelector(".new-comment-text").getAttribute("data-comment") == document.querySelector(".new-comment-text").getAttribute("data-id")){
+                  var x = $('[data-comment]').val();
+                }*/
+                /*if($(this).data('id') == $("input[data-comment]")){
+                  var x = $('[data-comment]').val();
+                }*/
+                //var x = $(this).attr("data-comment");
+                //var x = $(document).data('input[data-id]');
+                //var x =  $(this).data("comment");
+
+                /*switch ( $( "input[data-comment]" ).index(this) ) {
+                  case 0 :
+                    console.log($(this).eq(2).data("comment"));
+                    break;
+                  case 1 :
+                    console.log($(this).data("comment"));
+                    break;
+                  case 2 :
+                    console.log($(this).data("comment"));
+                    break;
+                  case 3 :
+                    console.log($(this).data("comment"));
+                    break;
+                  case 4 :
+                    console.log($(this).data("comment"));
+                    break;  
+                }*/
+                /*var x = 0;
+                for(i=0;i<=$(this).data("comment").length;i++){
+                  x = i;
+                }*/
+
+                //for(i=0;i<=$(this).data("comment").length;i++){
+                  //if(i == x){
+                  //y = $("comment=" + String(x) +"");
+                var gettingSpecificCommentFieldValue = $('input[data-comment]:eq( ' + submitButtonsIds +' )').val();
+                var newCommentInfo = {"data": data.newCommentDetails,
+                                      "comment": gettingSpecificCommentFieldValue,
+                                      "whichPost": submitButtonsIds + 1
+                                      };
+                var jsonifyNewCommentInfo = JSON.parse(JSON.stringify(newCommentInfo));
+                
+                
+                console.log(newCommentInfo);
+                //Sending new comment info(comment itself, username)
+                fetch(`${window.origin}/store-new-comments`, {
+                    method:'POST',
+                    credentials: "include",
+                    body: JSON.stringify(newCommentInfo),
+                    cache: "no-cache",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                })
+                .then((res) => {
+                  if (res.status == 200){
+                    return ;
+                  }
+                  else {
+                      console.log(`Fetch error: ${res.status}`)
+                      return ;
+                  }
+
+                })
+                .then((info) => (info))
+                
+                .catch((error)=> console.log(error))
+                                                                     
+                
+                
+                //$("div[data-class]").each(function() {
+                //document.querySelectorAll('[data-class]').forEach(function(node) {
+                  
+                  //var newCommentContainer = node.children[submitButtonsIds].appendChild(document.querySelector("#here-lied-new-comment"));
+                  var newCommentTemplate = document.querySelector("#new-comment-template").innerHTML;
+                  var compiledNewCommentTemplate = Handlebars.compile(newCommentTemplate);
+                  var newCommentGeneratedHTML = compiledNewCommentTemplate(jsonifyNewCommentInfo);
+                  var newCommentContainer = document.querySelector("#here-lied-new-comment");
+
+                  //newCommentContainer.innerHTML = newCommentGeneratedHTML;
+                  //console.log(document.querySelector("#here-lied-new-comment").);
+                  //var n = jQuery(this).find(".address").text();
+                  /*for(i=0;i<=$(this).data("class");i++){
+                    if($('div[data-class]:eq( ' + submitButtonsIds +' )')){
+                      console.log(document.querySelector("#here-lied-new-comment").innerHTML);
+                    }
+                  }*/
+                  
+                  var commentsAppending = document.querySelectorAll(`div[data-class="${submitButtonsIds}"] #here-lied-new-comment`);
+                  [].forEach.call(commentsAppending, function(commentAppending) {
+                    commentAppending.innerHTML += newCommentGeneratedHTML;
+                  });
+                  //x.querySelector("#here-lied-new-comment").innerHTML ;
+
+                  //console.log($(this).);
+                  //console.log($(this).data("class"));
+                  //(domList.indexOf
+
+                //});
+                e.preventDefault();
+                //}
+              //}
+              
+
+
+                
+                //console.log($(this).innerHTML($(this).html('comment')));
+                //console.log($('input[data-comment]:eq( 2 )'));
+                //console.log(jsonifyGettingSpecificCommentFieldValue);
+                //console.log(document.querySelector(".new-comment-text").getAttribute("data-comment"));
+    
+                //console.log("Button Clicked!");
+                //console.log(document.querySelector("[data-comment]").innerHTML);
+              //});
+            });
+              
             })
             .catch((err)=> console.log(err));
-        });   
-
+          
         function createHTML(postsContent){
           var postsTemplate = document.querySelector("#posts-template").innerHTML;
           var compiledPostsTemplate = Handlebars.compile(postsTemplate);
@@ -115,6 +254,8 @@
           
           //console.log(html);
         //});
+
+
         
         var x = -1;
         Handlebars.registerHelper('count', function(counter) {
@@ -136,5 +277,20 @@
                 return opts.inverse(this);
             }
         });
+
+        //function new_comment(newCommentContent){
+              //var newCommentTemplate = document.querySelector("#new-comment-template").innerHTML;
+              //var compiledNewCommentTemplate = Handlebars.compile(newCommentTemplate);
+              //var newCommentGeneratedHTML = compiledNewCommentTemplate(newCommentContent);
+              //var newCommentContainer = document.querySelector("#here-lied-new-comment");
+               
+            //}
+        
+
+
+        
+      }); 
+
+      
 </script>
 {% endblock content %}
