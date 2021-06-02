@@ -19,6 +19,6 @@ jsonify==0.5
 jsonschema==2.6.0
 Jinja2==2.10.1
 config==0.4.2
-urllib3==1.24.3
+urllib3==1.26.5
 Pillow==6.2.1
 Werkzeug==0.15.6
